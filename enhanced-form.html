@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Formulaire Amélioré — Démo HTML5 Accessible</title>
+    <meta
+      name="description"
+      content="Exemple complet d'un formulaire HTML5 accessible avec validations natives, contenu structuré, tableaux, listes et médias, prêt pour évaluation."
+    />
+    <meta name="author" content="Ton Nom" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Formulaire HTML5 Accessible — Démo" />
+    <meta
+      property="og:description"
+      content="Formulaire complet avec validations, sémantique, tableaux, listes et médias."
+    />
+    <meta property="og:type" content="website" />
+
+    <style>
+      /* Style minimal, lisible et accessible (contraste OK) */
+      :root {
+        --bg: #0f172a; /* slate-900 */
+        --card: #111827; /* gray-900 */
+        --text: #e5e7eb; /* gray-200 */
+        --muted: #9ca3af; /* gray-400 */
+        --primary: #22d3ee; /* cyan-400 */
+        --accent: #a78bfa; /* violet-300 */
+        --danger: #f87171; /* red-400 */
+        --ok: #34d399; /* green-400 */
+        --border: #374151; /* gray-700 */
+        --focus: #fde68a; /* amber-200 */
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+          Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+          "Segoe UI Emoji";
+        background: linear-gradient(180deg, var(--bg), #0b1025 60%);
+        color: var(--text);
+        line-height: 1.6;
+      }
+      header,
+      nav,
+      main,
+      footer,
+      aside,
+      section,
+      article {
+        display: block;
+      }
+      header {
+        border-bottom: 1px solid var(--border);
+        background: #0b122a99;
+        backdrop-filter: blur(6px);
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+      h1,
+      h2,
+      h3 {
+        line-height: 1.25;
+      }
+      h1 {
+        font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+        margin: 0 0 0.5rem;
+      }
+      h2 {
+        font-size: clamp(1.4rem, 2vw, 1.8rem);
+        margin: 1.8rem 0 0.75rem;
+      }
+      h3 {
+        font-size: 1.15rem;
+        margin: 1rem 0 0.5rem;
+        color: var(--accent);
+      }
+      p,
+      li {
+        font-size: 1rem;
+        color: var(--text);
+      }
+      nav ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      nav a {
+        color: var(--primary);
+        text-decoration: none;
+        border-bottom: 1px dashed transparent;
+      }
+      nav a:focus,
+      nav a:hover {
+        border-bottom-color: var(--primary);
+        outline: none;
+      }
+
+      .grid {
+        display: grid;
+        gap: 1.25rem;
+      }
+      @media (min-width: 900px) {
+        .grid-2 {
+          grid-template-columns: 2fr 1fr;
+        }
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.25rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      }
+
+      /* Formulaire */
+      form {
+        display: grid;
+        gap: 1rem;
+      }
+      fieldset {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+      }
+      legend {
+        padding: 0 0.5rem;
+        color: var(--accent);
+      }
+      label {
+        display: inline-block;
+        margin-bottom: 0.35rem;
+      }
+      .row {
+        display: grid;
+        gap: 0.75rem;
+      }
+      @media (min-width: 700px) {
+        .row-2 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .row-3 {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 0.6rem 0.7rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #0b122a;
+        color: var(--text);
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: 2px solid var(--focus);
+        outline-offset: 2px;
+        border-color: var(--focus);
+      }
+      .hint {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      .help {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-top: -0.35rem;
+      }
+      .req::after {
+        content: " *";
+        color: var(--danger);
+      }
+      .inline {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+      button {
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, #172554, #111827);
+        color: var(--text);
+        padding: 0.7rem 1rem;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      button[type="submit"] {
+        border-color: var(--ok);
+      }
+      button[type="reset"] {
+        border-color: var(--danger);
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      thead th {
+        background: #0b122a;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 0.6rem;
+        text-align: left;
+      }
+      caption {
+        caption-side: top;
+        padding: 0.5rem;
+        color: var(--muted);
+      }
+
+      /* Badges & small UI bits */
+      .badge {
+        padding: 0.15rem 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <p class="badge" aria-hidden="true">Démo évaluable</p>
+        <h1>Formulaire HTML5 — Version « enhanced »</h1>
+        <nav aria-label="Navigation principale">
+          <ul>
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#specs">Spécifications</a></li>
+            <li><a href="#tarifs">Tableau & médias</a></li>
+            <li><a href="#form">Formulaire</a></li>
+            <li><a href="#aide">Aide</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="intro" class="container grid grid-2">
+      <section class="card">
+        <h2>Introduction</h2>
+        <p>
+          Bienvenue ! Cette page démontre une
+          <strong>mise en page sémantique</strong>, un
+          <strong>formulaire HTML5 complet</strong> avec validations natives, et
+          du contenu structuré (listes, tableaux, médias). Tout est pensé
+          <em>accessibilité d’abord</em>.
+        </p>
+
+        <h3>Contenu inclus</h3>
+        <ul>
+          <li>
+            Balises sémantiques : <code>header</code>, <code>main</code>,
+            <code>section</code>, <code>article</code>, <code>aside</code>,
+            <code>footer</code>.
+          </li>
+          <li>Listes ordonnées et non ordonnées.</li>
+          <li>
+            Tableau avec <code>caption</code>, <code>thead</code>,
+            <code>tbody</code>, <code>scope</code>.
+          </li>
+          <li>Médias (image SVG intégrée).</li>
+          <li>
+            Formulaire HTML5 : textes, e-mail, URL, tel, date/heure, nombre,
+            range, couleur, fichier, mot de passe, radio, cases à cocher,
+            sélection, datalist, textarea.
+          </li>
+          <li>
+            Attributs : <code>placeholder</code>, <code>required</code>,
+            <code>autocomplete</code>, <code>readonly</code>,
+            <code>pattern</code>,
+            <code>min</code>/<code>max</code>/<code>step</code>, etc.
+          </li>
+        </ul>
+
+        <details>
+          <summary>Pourquoi la validation native ?</summary>
+          <p>
+            La validation HTML5 (<code>required</code>, <code>type</code>,
+            <code>pattern</code>) fournit des messages système accessibles, sans
+            JavaScript. Les aides de saisie (<code>autocomplete</code>)
+            accélèrent l’entrée et réduisent les erreurs.
+          </p>
+        </details>
+      </section>
+
+      <aside class="card" aria-labelledby="media-title">
+        <h2 id="media-title">Médias</h2>
+        <figure>
+          <!-- Image vectorielle inline via data URI -->
+          <img
+            alt="Illustration vectorielle d’un formulaire stylisé"
+            width="480"
+            height="240"
+            src='data:image/svg+xml;utf8,
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300">
+            <defs>
+              <linearGradient id="g" x1="0" x2="1">
+                <stop offset="0" stop-color="%2322d3ee"/>
+                <stop offset="1" stop-color="%23a78bfa"/>
+              </linearGradient>
+            </defs>
+            <rect width="600" height="300" fill="%230b1025"/>
+            <rect x="60" y="40" width="480" height="220" rx="16" fill="%23111827" stroke="%23374151"/>
+            <rect x="90" y="80" width="420" height="18" rx="4" fill="url(%23g)"/>
+            <rect x="90" y="120" width="280" height="14" rx="3" fill="%239ca3af"/>
+            <rect x="90" y="150" width="360" height="14" rx="3" fill="%239ca3af"/>
+            <circle cx="520" cy="240" r="24" fill="%2334d399"/>
+          </svg>'
+          />
+          <figcaption class="hint">
+            Image SVG intégrée (aucun fichier externe).
+          </figcaption>
+        </figure>
+      </aside>
+
+      <article id="specs" class="card" aria-labelledby="titre-specs">
+        <h2 id="titre-specs">Spécifications du projet</h2>
+        <ol>
+          <li>Contenu bien structuré (listes, tableaux, médias).</li>
+          <li>Formulaire HTML5 complet avec large variété de champs.</li>
+          <li>Attributs de formulaire correctement utilisés.</li>
+          <li>Validation HTML5 activée sur les champs pertinents.</li>
+          <li>Mise en page claire et accessible.</li>
+        </ol>
+      </article>
+
+      <section id="tarifs" class="card">
+        <h2>Tableau & légende</h2>
+        <div
+          class="table-wrap"
+          role="region"
+          aria-label="Tableau des offres"
+          tabindex="0"
+        >
+          <table>
+            <caption>
+              Comparatif des offres (exemple)
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Offre</th>
+                <th scope="col">Stockage</th>
+                <th scope="col">Support</th>
+                <th scope="col">Prix / mois</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Starter</th>
+                <td>10 Go</td>
+                <td>E-mail</td>
+                <td>5 €</td>
+              </tr>
+              <tr>
+                <th scope="row">Pro</th>
+                <td>100 Go</td>
+                <td>E-mail + Chat</td>
+                <td>15 €</td>
+              </tr>
+              <tr>
+                <th scope="row">Business</th>
+                <td>1 To</td>
+                <td>24/7 Prioritaire</td>
+                <td>49 €</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hint">
+          Utilise <code>caption</code>, <code>thead</code>,
+          <code>tbody</code> et les portées <code>scope</code> pour
+          l’accessibilité.
+        </p>
+      </section>
+
+      <section id="form" class="card" aria-labelledby="titre-form">
+        <h2 id="titre-form">Formulaire d’inscription (HTML5 + a11y)</h2>
+
+        <form action="#" method="get" aria-describedby="form-help">
+          <p id="form-help" class="help">
+            Les champs marqués <span class="req" aria-hidden="true"></span> sont
+            obligatoires.
+          </p>
+
+          <fieldset>
+            <legend>Identité</legend>
+            <div class="row row-2">
+              <div>
+                <label class="req" for="prenom">Prénom</label>
+                <input
+                  id="prenom"
+                  name="given-name"
+                  type="text"
+                  placeholder="Ada"
+                  required
+                  autocomplete="given-name"
+                  minlength="2"
+                  maxlength="50"
+                />
+              </div>
+              <div>
+                <label class="req" for="nom">Nom</label>
+                <input
+                  id="nom"
+                  name="family-name"
+                  type="text"
+                  placeholder="Lovelace"
+                  required
+                  autocomplete="family-name"
+                  minlength="2"
+                  maxlength="60"
+                />
+              </div>
+              <div>
+                <label class="req" for="email">E-mail</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="nom@domaine.tld"
+                  required
+                  autocomplete="email"
+                  inputmode="email"
+                />
+              </div>
+              <div>
+                <label for="site">Site web</label>
+                <input
+                  id="site"
+                  name="url"
+                  type="url"
+                  placeholder="https://exemple.com"
+                  autocomplete="url"
+                />
+              </div>
+              <div>
+                <label class="req" for="tel">Téléphone</label>
+                <input
+                  id="tel"
+                  name="tel"
+                  type="tel"
+                  placeholder="+228 90 00 00 00"
+                  required
+                  autocomplete="tel"
+                  inputmode="tel"
+                  pattern="^\+?[0-9\s\-]{7,15}$"
+                  aria-describedby="tel-hint"
+                />
+                <p id="tel-hint" class="help">
+                  Format attendu : chiffres, espaces et tirets, avec ou sans « +
+                  ».
+                </p>
+              </div>
+              <div>
+                <label for="pays">Pays</label>
+                <select id="pays" name="country" autocomplete="country">
+                  <option value="">Sélectionner…</option>
+                  <optgroup label="Afrique">
+                    <option value="TG">Togo</option>
+                    <option value="CI">Côte d’Ivoire</option>
+                    <option value="SN">Sénégal</option>
+                  </optgroup>
+                  <optgroup label="Europe">
+                    <option value="FR">France</option>
+                    <option value="BE">Belgique</option>
+                  </optgroup>
+                </select>
+              </div>
+              <div>
+                <label for="ville">Ville</label>
+                <input
+                  id="ville"
+                  name="address-level2"
+                  type="text"
+                  placeholder="Lomé"
+                  autocomplete="address-level2"
+                />
+              </div>
+              <div>
+                <label for="code">Code postal</label>
+                <input
+                  id="code"
+                  name="postal-code"
+                  type="text"
+                  placeholder="0000"
+                  autocomplete="postal-code"
+                  inputmode="numeric"
+                />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Compte & préférences</legend>
+            <div class="row row-2">
+              <div>
+                <label class="req" for="password">Mot de passe</label>
+                <input
+                  id="password"
+                  name="new-password"
+                  type="password"
+                  required
+                  autocomplete="new-password"
+                  minlength="8"
+                  maxlength="64"
+                  placeholder="Au moins 8 caractères"
+                />
+              </div>
+              <div>
+                <label for="invite">Code d’invitation (lecture seule)</label>
+                <input
+                  id="invite"
+                  name="invite"
+                  type="text"
+                  value="ONBOARD-2025"
+                  readonly
+                />
+              </div>
+              <div>
+                <label for="role">Rôle (avec datalist)</label>
+                <input
+                  id="role"
+                  name="role"
+                  list="roles"
+                  placeholder="Choisir ou saisir…"
+                />
+                <datalist id="roles">
+                  <option value="Étudiant·e"></option>
+                  <option value="Développeur·euse"></option>
+                  <option value="Designer"></option>
+                  <option value="Chef·fe de projet"></option>
+                </datalist>
+              </div>
+              <div>
+                <label for="avatar">Avatar (PNG/JPG, max indicatif)</label>
+                <input
+                  id="avatar"
+                  name="avatar"
+                  type="file"
+                  accept=".png,.jpg,.jpeg"
+                />
+              </div>
+              <div>
+                <label for="couleur">Couleur favorite</label>
+                <input id="couleur" name="color" type="color" value="#22d3ee" />
+              </div>
+              <div>
+                <label for="range">Niveau d’expérience</label>
+                <input
+                  id="range"
+                  name="experience"
+                  type="range"
+                  min="0"
+                  max="10"
+                  step="1"
+                  value="5"
+                  aria-describedby="range-hint"
+                />
+                <p id="range-hint" class="help">0 = débutant, 10 = expert.</p>
+              </div>
+            </div>
+
+            <div class="row row-3">
+              <div>
+                <label class="req">Canal de contact préféré</label>
+                <div
+                  class="inline"
+                  role="radiogroup"
+                  aria-label="Préférence de contact"
+                >
+                  <label
+                    ><input
+                      type="radio"
+                      name="contact"
+                      value="email"
+                      required
+                    />
+                    E-mail</label
+                  >
+                  <label
+                    ><input type="radio" name="contact" value="tel" />
+                    Téléphone</label
+                  >
+                  <label
+                    ><input type="radio" name="contact" value="sms" />
+                    SMS</label
+                  >
+                </div>
+              </div>
+              <div>
+                <label>Abonnements</label>
+                <div class="inline">
+                  <label
+                    ><input type="checkbox" name="newsletter" value="news" />
+                    Newsletter</label
+                  >
+                  <label
+                    ><input type="checkbox" name="updates" value="updates" />
+                    Mises à jour</label
+                  >
+                  <label
+                    ><input type="checkbox" name="offers" value="offers" />
+                    Offres</label
+                  >
+                </div>
+              </div>
+              <div>
+                <label class="req" for="plan">Plan</label>
+                <select id="plan" name="plan" required>
+                  <option value="">Sélectionner…</option>
+                  <option value="starter">Starter</option>
+                  <option value="pro">Pro</option>
+                  <option value="business">Business</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Détails & disponibilité</legend>
+            <div class="row row-3">
+              <div>
+                <label class="req" for="date">Date de début</label>
+                <input id="date" name="start-date" type="date" required />
+              </div>
+              <div>
+                <label class="req" for="time">Heure souhaitée</label>
+                <input id="time" name="time" type="time" required />
+              </div>
+              <div>
+                <label for="slots">Nb. de créneaux</label>
+                <input
+                  id="slots"
+                  name="slots"
+                  type="number"
+                  min="1"
+                  max="10"
+                  step="1"
+                  value="3"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label for="budget">Budget estimé (€)</label>
+                <input
+                  id="budget"
+                  name="budget"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="Ex. 199.99"
+                  inputmode="decimal"
+                />
+              </div>
+              <div>
+                <label class="req" for="topic"
+                  >Sujet (minimum 10 caractères)</label
+                >
+                <input
+                  id="topic"
+                  name="topic"
+                  type="text"
+                  required
+                  minlength="10"
+                  maxlength="120"
+                  placeholder="Décrivez brièvement votre besoin"
+                />
+              </div>
+            </div>
+            <div>
+              <label for="message">Message</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="4"
+                placeholder="Détails complémentaires, contexte, attentes…"
+              ></textarea>
+            </div>
+          </fieldset>
+
+          <div class="inline">
+            <label class="req"
+              ><input type="checkbox" name="terms" required /> J’accepte les
+              conditions d’utilisation</label
+            >
+          </div>
+
+          <div class="actions">
+            <button type="submit">Envoyer</button>
+            <button type="reset">Réinitialiser</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="aide" class="card">
+        <h2>Aide & bonnes pratiques</h2>
+        <ul>
+          <li>
+            Chaque <strong>label</strong> pointe vers son champ
+            (<code>for</code>/<code>id</code>).
+          </li>
+          <li>
+            Les champs critiques utilisent <code>required</code> + types natifs
+            (e-mail, URL, tel).
+          </li>
+          <li>
+            Les indices (<code>aria-describedby</code>) aident sans surcharger
+            l’UI.
+          </li>
+          <li>
+            <code>autocomplete</code> est renseigné pour accélérer la saisie.
+          </li>
+          <li>
+            Tableau annoté pour les lecteurs d’écran (<code>caption</code>,
+            <code>scope</code>).
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer id="contact" class="container">
+      <hr aria-hidden="true" />
+      <h2>Contact</h2>
+      <address>
+        Réalisé par <a href="mailto:ton.email@example.com">Ton Nom</a> —
+        <a href="#" rel="nofollow">Mentions légales</a>
+      </address>
+    </footer>
+  </body>
+</html>
